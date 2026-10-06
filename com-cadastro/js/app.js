@@ -36,11 +36,11 @@ function tools(){const t=$('tl');t.innerHTML='';const el=(tag,cls)=>{const e=doc
 const bt=(ic,tx,fn,cls)=>{const b=el('button','tb'+(cls?' '+cls:''));b.innerHTML='<span>'+ic+'</span><small>'+tx+'</small>';b.setAttribute('aria-label',tx);b.onclick=fn;return b};
 const tg=el('div','tg');[['fill','🪣','Balde'],['pen','✏️','Lápis'],['era','🧽','Borracha']].forEach(([k,ic,tx])=>tg.appendChild(bt(ic,tx,()=>{tool=k;tools()},tool===k?'on':'')));
 tg.appendChild(bt('↩️','Desfazer',undo));tg.appendChild(bt('🗑️','Limpar',()=>{if(!light)return;snap();cx.clearRect(0,0,W,H);ops.push({t:'c'});save()}));const s=bt('💾','Salvar',saveImg,'ok');s.setAttribute('aria-label','Salvar na galeria do aparelho');tg.appendChild(s);t.appendChild(tg);
-const pal=el('div','pal');COLORS.forEach(c=>{const b=el('button','sw'+(c===col&&tool!=='era'?' on':''));b.style.background=c;b.setAttribute('aria-label','Cor '+c);b.onclick=()=>{col=c;if(tool==='era')tool='fill';tools()};pal.appendChild(b)});t.appendChild(pal);
+const pal=el('div','pal');COLORS.forEach(c=>{const b=el('button','sw'+(c===col&&tool!=='era'?' on':''));b.style.background=c;b.setAttribute('aria-label','Cor '+c);b.onclick=()=>{col=c;if(tool==='era'||tool==='move')tool='fill';tools()};pal.appendChild(b)});t.appendChild(pal);
 const sz=el('label','sz');sz.innerHTML='<span>Espessura</span><input type="range" aria-label="Espessura" min="2" max="80" value="'+size+'"><i></i>';const rg=sz.querySelector('input'),pv=sz.querySelector('i');const up=()=>{size=+rg.value;const d=Math.max(4,Math.min(32,size/2+2));pv.style.width=pv.style.height=d+'px';pv.style.background=tool==='era'?'#bbb':col};rg.oninput=up;up();t.appendChild(sz);
-t.insertAdjacentHTML('beforeend','<p class="gire">🔄 Vire o celular para o desenho ficar maior</p>')}
+t.insertAdjacentHTML('beforeend','<p class="gire">🔄 Vire o celular para o desenho ficar maior</p>');zAplica()}
 let cur=0;
-async function openColor(i){flush();from=$('gal').classList.contains('hide')?'home':'gal';cur=i;show('color','🎨 '+NAMES[i]);tools();cc.width=W;cc.height=H;cx.clearRect(0,0,W,H);$('lo').src=IMG.c(i);hist=[];ops=[];light=null;
+async function openColor(i){flush();from=$('gal').classList.contains('hide')?'home':'gal';cur=i;show('color','🎨 '+NAMES[i]);if(tool==='move')tool='fill';zi=0;ox=oy=0;zAplica();tools();cc.width=W;cc.height=H;cx.clearRect(0,0,W,H);$('lo').src=IMG.c(i);hist=[];ops=[];light=null;
 const [B,r]=await Promise.all([loadBits(IMG.m(i),W*H),dbGet(i)]);if(cur!==i)return;const L=areas(B);if(r&&r.ops){ops=r.ops;replay(cx,L,ops)}light=L}
 async function saveImg(){const o=document.createElement('canvas');o.width=W;o.height=H;const q=o.getContext('2d');q.fillStyle='#fff';q.fillRect(0,0,W,H);q.drawImage(cc,0,0);q.drawImage($('lo'),0,0,W,H);
 const name='garagem-da-diversao-'+NAMES[cur].toLowerCase().replace(/\s+/g,'-')+'.png';
@@ -72,9 +72,25 @@ function stroke(a,b){cx.globalCompositeOperation=tool==='era'?'destination-out':
 function replay(g,L,o){o=live(o);const at=a=>a.x>=0&&a.y>=0&&a.x<W&&a.y<H?L.lab[a.y*W+a.x]:0,ult=new Map();o.forEach((a,k)=>{if(a.t==='f')ult.set(at(a),k)});
 for(let k=0;k<o.length;k++){const a=o[k];if(a.t==='f'){if(ult.get(at(a))===k)paintFill(g,L,a.x,a.y,a.c)}else if(a.t==='s'){const p=a.p;g.globalCompositeOperation=a.e?'destination-out':'source-over';g.strokeStyle=a.c;g.lineWidth=a.w;g.lineCap=g.lineJoin='round';const seg=(x0,y0,x1,y1)=>{g.beginPath();g.moveTo(x0,y0);g.lineTo(x1,y1);g.stroke()};seg(p[0],p[1],p[0]+.1,p[1]);for(let k=2;k<p.length;k+=2)seg(p[k-2],p[k-1],p[k],p[k+1]);g.globalCompositeOperation='source-over'}}}
 const cw=$('cw');
-cw.addEventListener('pointerdown',e=>{if(!light)return;const p=pos(e);if(tool==='fill'){fill(p[0],p[1]);return}snap();drawing=true;lp=p;stroke(p,[p[0]+.1,p[1]]);sop={t:'s',c:col,w:size,e:tool==='era'?1:0,p:[p[0],p[1]]};ops.push(sop);cw.setPointerCapture(e.pointerId)});
-cw.addEventListener('pointermove',e=>{if(!drawing)return;const p=pos(e);stroke(lp,p);lp=p;sop.p.push(p[0],p[1])});
-['pointerup','pointercancel'].forEach(k=>cw.addEventListener(k,()=>{if(drawing){drawing=false;save()}}));
+/* ---------- ZOOM: botões + e −; com zoom, ✋ arrasta o desenho ----------
+   Só muda a transformação de #cz (deslocamento o em frações da janela, o ∈ [0, z−1]). pos() usa o tamanho real
+   do canvas na tela, então balde e lápis continuam acertando o ponto em qualquer zoom. */
+const ZN=[1,1.5,2,3,4];let zi=0,ox=0,oy=0,pan=null;
+function zAplica(){const z=ZN[zi];ox=Math.min(Math.max(ox,0),z-1);oy=Math.min(Math.max(oy,0),z-1);
+$('cz').style.transform=z===1?'':'translate('+(-ox*100)+'%,'+(-oy*100)+'%) scale('+z+')';
+$('zlv').textContent=String(z).replace('.',',')+'×';$('zout').disabled=zi===0;$('zin').disabled=zi===ZN.length-1;
+$('zmv').classList.toggle('hide',zi===0);$('zmv').classList.toggle('on',tool==='move');cw.classList.toggle('mover',tool==='move')}
+function zMuda(d){const z0=ZN[zi];zi=Math.min(Math.max(zi+d,0),ZN.length-1);const z=ZN[zi];   // amplia em volta do centro da janela
+ox=(.5+ox)/z0*z-.5;oy=(.5+oy)/z0*z-.5;if(zi===0&&tool==='move'){tool='fill';tools()}zAplica()}
+$('zin').onclick=()=>zMuda(1);$('zout').onclick=()=>zMuda(-1);
+cw.addEventListener('scroll',()=>{cw.scrollLeft=cw.scrollTop=0});   // navegadores sem overflow:clip rolam a janela ao focar botão
+$('zmv').onclick=()=>{tool=tool==='move'?'fill':'move';tools();zAplica()};
+cw.addEventListener('pointerdown',e=>{if(e.target.closest('.zoom'))return;
+if(tool==='move'){pan={x:e.clientX,y:e.clientY,ox,oy};cw.setPointerCapture(e.pointerId);return}
+if(!light)return;const p=pos(e);if(tool==='fill'){fill(p[0],p[1]);return}snap();drawing=true;lp=p;stroke(p,[p[0]+.1,p[1]]);sop={t:'s',c:col,w:size,e:tool==='era'?1:0,p:[p[0],p[1]]};ops.push(sop);cw.setPointerCapture(e.pointerId)});
+cw.addEventListener('pointermove',e=>{if(pan){ox=pan.ox-(e.clientX-pan.x)/cw.clientWidth;oy=pan.oy-(e.clientY-pan.y)/cw.clientHeight;zAplica();return}
+if(!drawing)return;const p=pos(e);stroke(lp,p);lp=p;sop.p.push(p[0],p[1])});
+['pointerup','pointercancel'].forEach(k=>cw.addEventListener(k,()=>{pan=null;if(drawing){drawing=false;save()}}));
 /* ---------- MEUS DESENHOS ---------- */
 async function openGal(){show('gal','🖼️ Meus desenhos');const g=$('gg');g.innerHTML='';let n=0;const fila=[];
 for(let i=0;i<NAMES.length;i++){const r=await dbGet(i);if(!r||!r.ops||!r.ops.length)continue;n++;
