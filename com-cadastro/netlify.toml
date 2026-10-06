@@ -1,0 +1,54 @@
+# Netlify: publica a própria pasta (site estático, sem build).
+[build]
+  publish = "."
+
+# Arquivos de trabalho não ficam públicos
+[[redirects]]
+  from = "/CLAUDE.md"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/HOSPEDAGEM.md"
+  to = "/404"
+  status = 404
+  force = true
+[[redirects]]
+  from = "/tools/*"
+  to = "/404"
+  status = 404
+  force = true
+
+# Código sempre conferido no servidor (o service worker cuida do modo offline)
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "no-cache"
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+[[headers]]
+  for = "/*.mask"
+  [headers.values]
+    Content-Type = "application/octet-stream"
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"

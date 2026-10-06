@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Garagem da Diversão</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2575bb">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="assets/icons/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Garagem">
+<link rel="stylesheet" href="css/style.css"></head><body>
+<header><button id="bk" class="hide">← Voltar</button><span id="tt">🚗 Garagem da Diversão</span></header>
+<main>
+<section id="home"><img class="hero" id="cover" alt="Garagem da Diversão">
+<button class="card g big" id="bgal">🖼️ Meus desenhos</button>
+<h2>🎨 Pintar</h2><div class="grid" id="gc"></div>
+<h2>🧩 Jogos</h2><div class="grid">
+<button class="card g" onclick="gDots()">🔵 Ligue os pontos</button>
+<button class="card g" onclick="gWS()">🔤 Caça-palavras</button>
+<button class="card g" onclick="gMaze()">🌀 Labirinto</button>
+<button class="card g" onclick="gMatch()">🔧 Peças ACDelco</button></div></section>
+<section id="color" class="hide"><div class="tools" id="tl"></div><div id="cw"><canvas id="cc" width="1311" height="924"></canvas><img id="lo" alt=""></div></section>
+<section id="game" class="hide"></section>
+<section id="cad" class="hide"><form id="fcad" class="cad" novalidate>
+<h2>Cadastro do responsável</h2>
+<p>Para a criança usar a Garagem da Diversão, um adulto responsável preenche estes dados <b>uma única vez</b> neste aparelho.</p>
+<label for="cn">Nome completo</label><input id="cn" autocomplete="name" maxlength="100" enterkeyhint="next"><small class="erro" id="cn-e"></small>
+<label for="ce">E-mail</label><input id="ce" type="email" autocomplete="email" inputmode="email" maxlength="120" enterkeyhint="next"><small class="erro" id="ce-e"></small>
+<label for="ct">Celular com DDD</label><input id="ct" type="tel" autocomplete="tel-national" inputmode="numeric" placeholder="(DDD) 99999-9999" enterkeyhint="done"><small class="erro" id="ct-e"></small>
+<label class="ck"><input type="checkbox" id="ca"><span>Sou pai, mãe ou responsável pela criança e concordo com o uso destes dados pelo Grupo Automec conforme o <a href="#priv" id="lpriv">aviso de privacidade</a>.</span></label><small class="erro" id="ca-e"></small>
+<label class="ck"><input type="checkbox" id="cm"><span>Quero receber novidades e ofertas do Grupo Automec por e-mail ou WhatsApp. <i>(opcional)</i></span></label>
+<details id="priv"><summary>Aviso de privacidade</summary><div id="privtxt"></div></details>
+<button class="card g big" type="submit" id="cbt">Começar a brincar! 🚗</button></form></section>
+<section id="gal" class="hide"><div class="grid" id="gg"></div><p class="h hide" id="ge">Você ainda não pintou nenhum desenho. Volte e escolha um carro em 🎨 Pintar!</p></section>
+</main><div class="toast" id="toast"></div>
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body></html>

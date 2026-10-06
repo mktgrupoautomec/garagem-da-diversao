@@ -1,0 +1,62 @@
+:root{--b:#2575bb;--y:#e3b83b;--bg:#eaf3fb;--t:#12324f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--t);font-family:"Fredoka","Trebuchet MS",system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+header{background:var(--b);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px}
+header button{background:var(--y);border:0;border-radius:20px;padding:8px 14px;font:inherit;font-size:16px;color:#12324f}
+main{max-width:1000px;margin:auto;padding:12px}
+.hero{width:100%;border-radius:16px;display:block}
+h2{margin:18px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.card{background:#fff;border:3px solid var(--b);border-radius:16px;padding:8px;text-align:center;font:inherit;font-weight:700;color:var(--t);cursor:pointer}
+.card img{width:100%;border-radius:8px;display:block;margin-bottom:6px}
+.card.g{padding:18px 8px;font-size:18px;background:var(--y);border-color:#b8921f}
+.hide{display:none}
+.box{background:#fff;border:3px solid var(--b);border-radius:14px;padding:10px;line-height:0;touch-action:none;position:relative}
+#ws{display:grid;grid-template-columns:repeat(11,1fr);gap:3px;touch-action:none;line-height:1}
+#ws div{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:clamp(14px,4.4vw,26px);border-radius:8px;background:#f2f7fc}
+#ws div.s{background:var(--y)}#ws div.f{background:#7bd88f}
+#wl{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}#wl span{background:#fff;border:2px solid var(--b);border-radius:12px;padding:4px 10px;font-weight:700}
+#wl span.f{text-decoration:line-through;background:#7bd88f}
+svg text{font-family:inherit;font-weight:700}
+.toast{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%) scale(0);background:var(--y);color:var(--t);font-size:30px;font-weight:700;padding:22px 30px;border-radius:24px;border:4px solid var(--b);transition:transform .3s;z-index:9;text-align:center}
+.toast.show{transform:translate(-50%,-50%) scale(1)}
+@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}.sh{animation:sh .3s}
+@keyframes pu{50%{r:16}}.nx{animation:pu .8s infinite;fill:#e33}
+p.h{margin:4px 0 8px;font-size:17px}
+.card.big{display:block;width:100%;margin-top:12px;font-size:20px}
+#gg .card{position:relative;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}#gg canvas{width:100%;height:auto;border-radius:8px;display:block;margin-bottom:4px}#gg small{font-weight:400;font-size:13px;opacity:.7}
+#gg .del{position:absolute;top:4px;right:4px;width:40px;height:40px;border-radius:50%;border:2px solid var(--b);background:#fff;font-size:18px;padding:0;line-height:1}
+/* tela de pintar: em pé = desenho em cima e ferramentas embaixo; deitado = ferramentas numa coluna ao lado */
+#color:not(.hide){display:flex;flex-direction:column;gap:8px}
+#cw{order:1;position:relative;width:100%;background:#fff;border-radius:12px;border:3px solid var(--b);touch-action:none;line-height:0;align-self:center}
+#cw canvas{width:100%;height:auto}#cw img{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.tools{order:2;display:flex;flex-direction:column;gap:8px}
+.tg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.tb{border:2px solid var(--b);background:#fff;border-radius:12px;padding:4px 2px;font:inherit;color:var(--t);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:54px;line-height:1.1;min-width:0}
+.tb span{font-size:22px}.tb small{font-size:11px;font-weight:700;margin-top:3px;white-space:nowrap}
+.tb.on{background:var(--b);color:#fff}.tb.ok{background:#2e9e4f;border-color:#2e9e4f;color:#fff}
+.pal{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;justify-items:center}
+.sw{width:100%;max-width:46px;aspect-ratio:1/1;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #9ab;padding:0}
+.sw.on{box-shadow:0 0 0 4px var(--t)}
+.sz{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;background:#fff;border:2px solid var(--b);border-radius:12px;padding:6px 10px;font-size:15px;line-height:1}
+.sz input{flex:1 1 90px;min-width:0;touch-action:none}.sz i{display:inline-block;border-radius:50%;flex:none}
+.gire{margin:0;text-align:center;font-size:14px;opacity:.75}
+:root{--topo:84px}
+@media (orientation:landscape){
+  #color:not(.hide){flex-direction:row;align-items:flex-start;justify-content:center;gap:10px}
+  .tools{order:0;flex:none;width:188px;max-height:calc(100vh - var(--topo));max-height:calc(100dvh - var(--topo));overflow-y:auto;padding:2px}
+  .tg{grid-template-columns:repeat(3,1fr)}.pal{grid-template-columns:repeat(4,1fr)}.gire{display:none}
+  #cw{flex:1 1 auto;min-width:0;align-self:flex-start;max-width:calc((100vh - var(--topo)) * 1.419);max-width:calc((100dvh - var(--topo)) * 1.419)}
+}
+@media (min-width:700px){.gire{display:none}}
+@media (max-height:500px){:root{--topo:60px}header{padding:4px 10px;font-size:17px}header button{padding:5px 12px;font-size:15px}main{padding:8px}.tb{min-height:42px}.tb small{display:none}.tools{gap:6px}.sz{padding:4px 8px}.sz span{display:none}}
+/* cadastro */
+.cad{background:#fff;border:3px solid var(--b);border-radius:16px;padding:16px;max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:4px}
+.cad h2{margin:0 0 4px}.cad p{margin:0 0 8px;line-height:1.35}
+.cad label{font-weight:700;margin-top:8px}
+.cad input:not([type=checkbox]){font:inherit;font-size:18px;padding:12px;border:2px solid #9ab;border-radius:12px;width:100%;color:var(--t);-webkit-user-select:text;user-select:text}
+.cad input:focus{outline:3px solid var(--y);border-color:var(--b)}.cad input[aria-invalid=true]{border-color:#d32f2f}
+.cad .ck{display:flex;gap:10px;align-items:flex-start;font-weight:400;line-height:1.35;margin-top:12px}.cad .ck input{width:26px;height:26px;flex:none;margin:0;accent-color:var(--b)}
+.erro{color:#c62828;font-weight:700;font-size:14px;min-height:0}.erro:empty{display:none}
+.cad details{margin-top:10px;background:var(--bg);border-radius:12px;padding:8px 12px;font-size:15px}.cad summary{font-weight:700;cursor:pointer}.cad details p{margin:8px 0 0}
+.cad .big{margin-top:14px}
